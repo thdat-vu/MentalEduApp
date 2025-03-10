@@ -1,0 +1,109 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "MentalEduContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "MentalEdu.Repositories",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[Appointment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Blog]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BlogComment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CounselingSession]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProgramCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Psychologist]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PsychologistSpecialization]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Report]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SessionFeedback]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Specialization]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SupportProgram]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Survey]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SurveyAnswer]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SurveyQuestion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserAccount]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserProgram]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
