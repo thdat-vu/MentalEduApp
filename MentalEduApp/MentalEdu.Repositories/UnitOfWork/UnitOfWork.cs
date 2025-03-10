@@ -1,85 +1,71 @@
-using MentalEdu.Repositories.DbContext;
+using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MentalEduContext _context;
-        private readonly Dictionary<Type, object> _repositories;
-        private bool _disposed;
+        private readonly MentalEduGroupProjectContext _context;
+        private bool _disposed = false;
 
-        // Specific repositories
-        private IProgramCategoryRepository _programCategoryRepository;
-        private ISupportProgramRepository _supportProgramRepository;
-        private IUserProgramRepository _userProgramRepository;
-        private IUserAccountRepository _userAccountRepository;
-        private IPsychologistRepository _psychologistRepository;
-        private IAppointmentRepository _appointmentRepository;
-        private IBlogRepository _blogRepository;
+        // Repositories
+        private IAppointmentRepository _appointments;
+        private IBlogRepository _blogs;
+        private IBlogCommentRepository _blogComments;
+        private INotificationRepository _notifications;
+        private IProgramCategoryRepository _programCategories;
+        private IReportRepository _reports;
+        private ISupportProgramRepository _supportPrograms;
+        private ISurveyRepository _surveys;
+        private ISurveyAnswerRepository _surveyAnswers;
+        private ISurveyQuestionRepository _surveyQuestions;
+        private IUserAccountRepository _userAccounts;
+        private IUserProgramRepository _userPrograms;
 
-        public UnitOfWork(MentalEduContext context)
+        public UnitOfWork(MentalEduGroupProjectContext context)
         {
             _context = context;
-            _repositories = new Dictionary<Type, object>();
         }
 
-        public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
+        public IAppointmentRepository Appointments => _appointments ??= new AppointmentRepository(_context);
+        public IBlogRepository Blogs => _blogs ??= new BlogRepository(_context);
+        public IBlogCommentRepository BlogComments => _blogComments ??= new BlogCommentRepository(_context);
+        public INotificationRepository Notifications => _notifications ??= new NotificationRepository(_context);
+        public IProgramCategoryRepository ProgramCategories => _programCategories ??= new ProgramCategoryRepository(_context);
+        public IReportRepository Reports => _reports ??= new ReportRepository(_context);
+        public ISupportProgramRepository SupportPrograms => _supportPrograms ??= new SupportProgramRepository(_context);
+        public ISurveyRepository Surveys => _surveys ??= new SurveyRepository(_context);
+        public ISurveyAnswerRepository SurveyAnswers => _surveyAnswers ??= new SurveyAnswerRepository(_context);
+        public ISurveyQuestionRepository SurveyQuestions => _surveyQuestions ??= new SurveyQuestionRepository(_context);
+        public IUserAccountRepository UserAccounts => _userAccounts ??= new UserAccountRepository(_context);
+        public IUserProgramRepository UserPrograms => _userPrograms ??= new UserProgramRepository(_context);
+
+        public int Complete()
         {
-            var entityType = typeof(TEntity);
-
-            if (!_repositories.ContainsKey(entityType))
-            {
-                var repository = new GenericRepository<TEntity>(_context);
-                _repositories.Add(entityType, repository);
-            }
-
-            return (IGenericRepository<TEntity>)_repositories[entityType];
+            return _context.SaveChanges();
         }
-
-        public IProgramCategoryRepository ProgramCategories => 
-            _programCategoryRepository ??= new ProgramCategoryRepository(_context);
-
-        public ISupportProgramRepository SupportPrograms => 
-            _supportProgramRepository ??= new SupportProgramRepository(_context);
-
-        public IUserProgramRepository UserPrograms => 
-            _userProgramRepository ??= new UserProgramRepository(_context);
-
-        public IUserAccountRepository UserAccounts => 
-            _userAccountRepository ??= new UserAccountRepository(_context);
-
-        public IPsychologistRepository Psychologists => 
-            _psychologistRepository ??= new PsychologistRepository(_context);
-
-        public IAppointmentRepository Appointments => 
-            _appointmentRepository ??= new AppointmentRepository(_context);
-
-        public IBlogRepository Blogs => 
-            _blogRepository ??= new BlogRepository(_context);
 
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed && disposing)
-            {
-                _context.Dispose();
-            }
-            _disposed = true;
         }
     }
 }

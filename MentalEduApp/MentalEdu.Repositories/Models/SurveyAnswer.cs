@@ -11,7 +11,7 @@ public partial class SurveyAnswer
 
     public Guid? SurveyId { get; set; }
 
-    public int? UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public Guid? QuestionId { get; set; }
 

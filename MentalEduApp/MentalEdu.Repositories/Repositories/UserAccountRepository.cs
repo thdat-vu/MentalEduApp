@@ -1,38 +1,30 @@
-using MentalEdu.Repositories.DbContext;
+using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public class UserAccountRepository : GenericRepository<UserAccount>, IUserAccountRepository
+    public class UserAccountRepository : Repository<UserAccount>, IUserAccountRepository
     {
-        private readonly MentalEduContext _dbContext;
-
-        public UserAccountRepository(MentalEduContext context) : base(context)
+        public UserAccountRepository(MentalEduGroupProjectContext context) : base(context)
         {
-            _dbContext = context;
         }
 
-        public async Task<UserAccount?> GetUserByUsernameAsync(string username)
+        public async Task<UserAccount> GetByEmailAsync(string email)
         {
-            return await _dbContext.UserAccounts
-                .FirstOrDefaultAsync(u => u.UserName == username && u.IsActive);
+            return await _dbSet.FirstOrDefaultAsync(u => u.Email == email && u.ActiveFlag == true);
         }
 
-        public async Task<UserAccount?> GetUserWithProgramsAsync(int userId)
+        public async Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(string role)
         {
-            return await _dbContext.UserAccounts
-                .Include(u => u.UserPrograms)
-                    .ThenInclude(up => up.Program)
-                .FirstOrDefaultAsync(u => u.UserAccountId == userId && u.IsActive);
+            return await _dbSet.Where(u => u.Role == role && u.ActiveFlag == true)
+                              .OrderBy(u => u.FullName)
+                              .ToListAsync();
         }
 
         public async Task<bool> IsEmailUniqueAsync(string email)
         {
-            return !await _dbContext.UserAccounts
-                .AnyAsync(u => u.Email == email);
+            return !await _dbSet.AnyAsync(u => u.Email == email);
         }
     }
 }

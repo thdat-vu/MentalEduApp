@@ -9,9 +9,9 @@ public partial class Appointment
 {
     public Guid Id { get; set; }
 
-    public int? StudentId { get; set; }
+    public Guid? StudentId { get; set; }
 
-    public int? PsychologistId { get; set; }
+    public Guid? PsychologistId { get; set; }
 
     public DateTime AppointmentDate { get; set; }
 

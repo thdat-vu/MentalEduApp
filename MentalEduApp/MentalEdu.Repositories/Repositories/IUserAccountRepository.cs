@@ -1,13 +1,12 @@
 using MentalEdu.Repositories.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public interface IUserAccountRepository : IGenericRepository<UserAccount>
+    public interface IUserAccountRepository : IRepository<UserAccount>
     {
-        Task<UserAccount?> GetUserByUsernameAsync(string username);
-        Task<UserAccount?> GetUserWithProgramsAsync(int userId);
+        // Add specific methods for UserAccount entity
+        Task<UserAccount> GetByEmailAsync(string email);
+        Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(string role);
         Task<bool> IsEmailUniqueAsync(string email);
     }
 }

@@ -1,36 +1,34 @@
-using MentalEdu.Repositories.DbContext;
+using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public class UserProgramRepository : GenericRepository<UserProgram>, IUserProgramRepository
+    public class UserProgramRepository : Repository<UserProgram>, IUserProgramRepository
     {
-        private readonly MentalEduContext _dbContext;
-
-        public UserProgramRepository(MentalEduContext context) : base(context)
+        public UserProgramRepository(MentalEduGroupProjectContext context) : base(context)
         {
-            _dbContext = context;
         }
 
-        public async Task<IEnumerable<UserProgram>> GetUserProgramsAsync(int userId)
+        public async Task<IEnumerable<UserProgram>> GetProgramsByUserIdAsync(Guid userId)
         {
-            return await _dbContext.UserPrograms
-                .Where(up => up.UserId == userId && up.ActiveFlag == true)
-                .Include(up => up.Program)
-                .ToListAsync();
+            return await _dbSet.Where(up => up.UserId == userId && up.ActiveFlag == true)
+                              .OrderByDescending(up => up.CreatedAt)
+                              .ToListAsync();
         }
 
-        public async Task<UserProgram?> GetUserProgramDetailsAsync(Guid id)
+        public async Task<IEnumerable<UserProgram>> GetUsersByProgramIdAsync(Guid programId)
         {
-            return await _dbContext.UserPrograms
-                .Include(up => up.Program)
-                .Include(up => up.User)
-                .FirstOrDefaultAsync(up => up.Id == id);
+            return await _dbSet.Where(up => up.ProgramId == programId && up.ActiveFlag == true)
+                              .OrderByDescending(up => up.CreatedAt)
+                              .ToListAsync();
+        }
+
+        public async Task<IEnumerable<UserProgram>> GetProgramsByStatusAsync(string status)
+        {
+            return await _dbSet.Where(up => up.Status == status && up.ActiveFlag == true)
+                              .OrderByDescending(up => up.CreatedAt)
+                              .ToListAsync();
         }
     }
 }

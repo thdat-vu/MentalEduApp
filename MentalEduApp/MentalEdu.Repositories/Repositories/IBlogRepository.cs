@@ -1,14 +1,11 @@
 using MentalEdu.Repositories.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public interface IBlogRepository : IGenericRepository<Blog>
+    public interface IBlogRepository : IRepository<Blog>
     {
-        Task<IEnumerable<Blog>> GetActiveBlogsAsync();
-        Task<Blog?> GetBlogWithCommentsAsync(Guid id);
+        // Add specific methods for Blog entity
+        Task<IEnumerable<Blog>> GetRecentBlogsAsync(int count);
         Task<IEnumerable<Blog>> GetBlogsByCategoryAsync(string category);
     }
 }

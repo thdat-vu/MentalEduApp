@@ -9,7 +9,7 @@ public partial class Report
 {
     public Guid Id { get; set; }
 
-    public int? UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public DateTime ReportDate { get; set; }
 
@@ -17,11 +17,15 @@ public partial class Report
 
     public string Content { get; set; }
 
+    public Guid? CreatedBy { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
     public bool? ActiveFlag { get; set; }
+
+    public virtual UserAccount CreatedByNavigation { get; set; }
 
     public virtual UserAccount User { get; set; }
 }

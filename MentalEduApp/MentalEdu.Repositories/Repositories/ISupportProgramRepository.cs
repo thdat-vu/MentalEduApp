@@ -1,14 +1,11 @@
 using MentalEdu.Repositories.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public interface ISupportProgramRepository : IGenericRepository<SupportProgram>
+    public interface ISupportProgramRepository : IRepository<SupportProgram>
     {
+        // Add specific methods for SupportProgram entity
+        Task<IEnumerable<SupportProgram>> GetProgramsByCategoryIdAsync(Guid categoryId);
         Task<IEnumerable<SupportProgram>> GetActiveProgramsAsync();
-        Task<IEnumerable<SupportProgram>> GetProgramsByCategoryAsync(Guid categoryId);
-        Task<SupportProgram?> GetProgramWithDetailsAsync(Guid id);
     }
 }

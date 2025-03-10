@@ -1,14 +1,12 @@
 using MentalEdu.Repositories.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MentalEdu.Repositories.Repositories
 {
-    public interface IAppointmentRepository : IGenericRepository<Appointment>
+    public interface IAppointmentRepository : IRepository<Appointment>
     {
-        Task<IEnumerable<Appointment>> GetAppointmentsByStudentAsync(int studentId);
-        Task<IEnumerable<Appointment>> GetAppointmentsByPsychologistAsync(Guid psychologistId);
-        Task<IEnumerable<Appointment>> GetUpcomingAppointmentsAsync(int userId);
+        // Add specific methods for Appointment entity
+        Task<IEnumerable<Appointment>> GetAppointmentsByStudentIdAsync(Guid studentId);
+        Task<IEnumerable<Appointment>> GetAppointmentsByPsychologistIdAsync(Guid psychologistId);
+        Task<IEnumerable<Appointment>> GetUpcomingAppointmentsAsync(Guid userId, bool isPsychologist);
     }
 }

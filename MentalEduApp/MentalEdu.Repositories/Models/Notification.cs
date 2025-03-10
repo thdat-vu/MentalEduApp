@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace MentalEdu.Repositories.Models;
 
-public partial class SessionFeedback
+public partial class Notification
 {
     public Guid Id { get; set; }
 
-    public Guid? SessionId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public int? StudentId { get; set; }
+    public string Message { get; set; }
 
-    public int Rating { get; set; }
+    public string NotificationType { get; set; }
 
-    public string FeedbackText { get; set; }
+    public bool? IsRead { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -23,7 +23,5 @@ public partial class SessionFeedback
 
     public bool? ActiveFlag { get; set; }
 
-    public virtual CounselingSession Session { get; set; }
-
-    public virtual UserAccount Student { get; set; }
+    public virtual UserAccount User { get; set; }
 }
