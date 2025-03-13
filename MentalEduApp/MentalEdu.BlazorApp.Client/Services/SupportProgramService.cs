@@ -4,22 +4,41 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MentalEdu.BlazorApp.Models;
+using System.Text.Json;
+using System.Text;
 
 namespace MentalEdu.BlazorApp.Client.Services
 {
     public class SupportProgramService
     {
         private readonly HttpClient _httpClient;
+        private readonly LoggingService _logger;
         private readonly string _baseUrl = "api/SupportProgram";
+        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
 
-        public SupportProgramService(HttpClient httpClient)
+        public SupportProgramService(HttpClient httpClient, LoggingService logger)
         {
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<SupportProgram>> GetAllProgramsAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<SupportProgram>>(_baseUrl);
+            try
+            {
+                var response = await _httpClient.GetAsync(_baseUrl);
+                response.EnsureSuccessStatusCode();
+                
+                return await response.Content.ReadFromJsonAsync<IEnumerable<SupportProgram>>(_jsonOptions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in GetAllProgramsAsync", ex);
+                throw;
+            }
         }
 
         public async Task<SupportProgram> GetProgramByIdAsync(Guid id)

@@ -4,6 +4,7 @@ using MentalEdu.Services.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace MentalEdu.BlazorApp.APIServices.Controllers
 {
@@ -13,11 +14,16 @@ namespace MentalEdu.BlazorApp.APIServices.Controllers
     {
         private readonly ISupportProgramService _supportProgramService;
         private readonly IProgramCategoryService _programCategoryService;
+        private readonly ILogger<SupportProgramController> _logger;
 
-        public SupportProgramController(ISupportProgramService supportProgramService, IProgramCategoryService programCategoryService)
+        public SupportProgramController(
+            ISupportProgramService supportProgramService, 
+            IProgramCategoryService programCategoryService,
+            ILogger<SupportProgramController> logger)
         {
             _supportProgramService = supportProgramService;
             _programCategoryService = programCategoryService;
+            _logger = logger;
         }
 
         // GET: api/SupportProgram
@@ -26,11 +32,14 @@ namespace MentalEdu.BlazorApp.APIServices.Controllers
         {
             try
             {
+                _logger.LogInformation("Getting all active support programs");
                 var programs = await _supportProgramService.GetActiveProgramsAsync();
+                _logger.LogInformation($"Retrieved {programs?.Count() ?? 0} programs");
                 return Ok(programs);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error getting support programs");
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

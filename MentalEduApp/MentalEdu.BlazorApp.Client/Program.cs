@@ -14,6 +14,7 @@ namespace MentalEdu.BlazorApp.Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<SupportProgramService>();
+            builder.Services.AddScoped<LoggingService>();
             await builder.Build().RunAsync();
         }
     }

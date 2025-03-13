@@ -3,6 +3,7 @@
 @using MentalEdu.BlazorApp.Client.Services
 @inject SupportProgramService SupportProgramService
 @inject NavigationManager NavigationManager
+@inject LoggingService Logger
 
 <h3>Edit Support Program</h3>
 
@@ -102,7 +103,8 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading data: {ex.Message}");
+            Logger.LogError($"Error loading program data for ID {Id}", ex);
+            await Logger.ShowErrorToUser("Failed to load program data. Please try again later.");
         }
     }
 
@@ -115,7 +117,8 @@ else
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating program: {ex.Message}");
+            Logger.LogError($"Error updating program with ID {Id}", ex);
+            await Logger.ShowErrorToUser("Failed to update program. Please try again later.");
         }
     }
 }

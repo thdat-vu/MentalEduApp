@@ -23,7 +23,7 @@ namespace MentalEdu.BlazorApp.APIServices
                                       $"Persist Security Info=True;" +
                                       $"User ID={Environment.GetEnvironmentVariable("DB_USER")};" +
                                       $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};" +
-                                      $"Encrypt=False";
+                                      $"Encrypt=False;TrustServerCertificate=True";
 
                 builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
             }
