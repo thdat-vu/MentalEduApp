@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using MentalEdu.Repositories.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace MentalEdu.Repositories.DBContext;
 
 public partial class MentalEduGroupProjectContext : DbContext
 {
+    private readonly IConfiguration _configuration;
+
     public MentalEduGroupProjectContext()
     {
     }
@@ -44,9 +47,15 @@ public partial class MentalEduGroupProjectContext : DbContext
     
     // TODO: config environment
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=YOUR-DEVICE;Initial Catalog=MentalEduGroupProject;User ID=xx;Password=xxxx;Encrypt=True");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // This is only used when the context is created without passing options
+            // For example, when using the context in design-time tools
+            // In production, the context should be configured through DI
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

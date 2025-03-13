@@ -1,0 +1,105 @@
+@page "/supportprograms/details/{Id:guid}"
+@using MentalEdu.BlazorApp.Models
+@using MentalEdu.BlazorApp.Client.Services
+@inject SupportProgramService SupportProgramService
+@inject NavigationManager NavigationManager
+@inject LoggingService Logger
+
+<h3>Program Details</h3>
+
+@if (program == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>@program.ProgramName</h4>
+            <div>
+                <a href="/supportprograms/edit/@program.Id" class="btn btn-primary">Edit</a>
+                <a href="/supportprograms" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(program.ImageUrl))
+                    {
+                        <img src="@program.ImageUrl" class="img-fluid rounded" alt="@program.ProgramName">
+                    }
+                    else
+                    {
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                            <span class="text-muted">No Image</span>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-3">Category</dt>
+                        <dd class="col-sm-9">@(categoryName ?? "Unknown")</dd>
+
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9">@program.Description</dd>
+
+                        <dt class="col-sm-3">Start Date</dt>
+                        <dd class="col-sm-9">@(program.StartDate?.ToShortDateString() ?? "Not specified")</dd>
+
+                        <dt class="col-sm-3">End Date</dt>
+                        <dd class="col-sm-9">@(program.EndDate?.ToShortDateString() ?? "Not specified")</dd>
+
+                        <dt class="col-sm-3">Created At</dt>
+                        <dd class="col-sm-9">@program.CreatedAt?.ToString("g")</dd>
+
+                        <dt class="col-sm-3">Updated At</dt>
+                        <dd class="col-sm-9">@program.UpdatedAt?.ToString("g")</dd>
+
+                        <dt class="col-sm-3">Status</dt>
+                        <dd class="col-sm-9">
+                            @if (program.ActiveFlag == true)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private SupportProgram program;
+    private string categoryName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProgram();
+    }
+
+    private async Task LoadProgram()
+    {
+        try
+        {
+            program = await SupportProgramService.GetProgramByIdAsync(Id);
+            
+            // Get category name
+            var categories = await SupportProgramService.GetAllCategoriesAsync();
+            var category = categories.FirstOrDefault(c => c.Id == program.CategoryId);
+            categoryName = category?.Name;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Error loading program details for ID {Id}", ex);
+            await Logger.ShowErrorToUser("Failed to load program details. Please try again later.");
+        }
+    }
+}
