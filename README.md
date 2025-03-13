@@ -47,7 +47,7 @@ The project is built using a multi-tier architecture:
    
    ```bash
    cd MentalEduApp\MentalEduApp
-    ```
+   
    ```
 2. Run the API service:
    
