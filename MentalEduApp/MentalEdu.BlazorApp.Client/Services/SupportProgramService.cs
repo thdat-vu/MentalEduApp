@@ -13,16 +13,17 @@ namespace MentalEdu.BlazorApp.Client.Services
     {
         private readonly HttpClient _httpClient;
         private readonly LoggingService _logger;
-        private readonly string _baseUrl = "api/SupportProgram";
+        private readonly string _baseUrl;
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         };
 
-        public SupportProgramService(HttpClient httpClient, LoggingService logger)
+        public SupportProgramService(HttpClient httpClient, LoggingService logger, AppConfigurationService configService)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _baseUrl = $"{configService.ApiBaseUrl}/api/SupportProgram";
         }
 
         public async Task<IEnumerable<SupportProgram>> GetAllProgramsAsync()
