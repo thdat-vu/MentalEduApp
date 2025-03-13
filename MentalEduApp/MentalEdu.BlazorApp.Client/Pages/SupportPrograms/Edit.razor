@@ -1,0 +1,121 @@
+@page "/supportprograms/edit/{Id:guid}"
+@using MentalEdu.BlazorApp.Models
+@using MentalEdu.BlazorApp.Client.Services
+@inject SupportProgramService SupportProgramService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Support Program</h3>
+
+@if (program == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <EditForm Model="@program" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-group mb-3">
+                            <label for="programName">Program Name</label>
+                            <InputText id="programName" @bind-Value="program.ProgramName" class="form-control" />
+                            <ValidationMessage For="@(() => program.ProgramName)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="description">Description</label>
+                            <InputTextArea id="description" @bind-Value="program.Description" class="form-control" rows="5" />
+                            <ValidationMessage For="@(() => program.Description)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="categoryId">Category</label>
+                            <InputSelect id="categoryId" @bind-Value="program.CategoryId" class="form-control">
+                                <option value="">-- Select Category --</option>
+                                @if (categories != null)
+                                {
+                                    @foreach (var category in categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => program.CategoryId)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="imageUrl">Image URL</label>
+                            <InputText id="imageUrl" @bind-Value="program.ImageUrl" class="form-control" />
+                            <ValidationMessage For="@(() => program.ImageUrl)" />
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="startDate">Start Date</label>
+                                    <InputDate id="startDate" @bind-Value="program.StartDate" class="form-control" />
+                                    <ValidationMessage For="@(() => program.StartDate)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="endDate">End Date</label>
+                                    <InputDate id="endDate" @bind-Value="program.EndDate" class="form-control" />
+                                    <ValidationMessage For="@(() => program.EndDate)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="/supportprograms" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private SupportProgram program;
+    private IEnumerable<ProgramCategory> categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            program = await SupportProgramService.GetProgramByIdAsync(Id);
+            categories = await SupportProgramService.GetAllCategoriesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await SupportProgramService.UpdateProgramAsync(program);
+            NavigationManager.NavigateTo("/supportprograms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating program: {ex.Message}");
+        }
+    }
+}

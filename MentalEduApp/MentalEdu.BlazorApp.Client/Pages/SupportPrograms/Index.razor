@@ -1,0 +1,145 @@
+@page "/supportprograms"
+@using MentalEdu.BlazorApp.Models
+@using MentalEdu.BlazorApp.Client.Services
+@inject SupportProgramService SupportProgramService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<h3>Support Programs</h3>
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="/supportprograms/create" class="btn btn-primary">Create New Program</a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="categoryFilter">Filter by Category:</label>
+            <select id="categoryFilter" class="form-control" @onchange="FilterByCategory">
+                <option value="">All Categories</option>
+                @if (categories != null)
+                {
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>
+
+@if (programs == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!programs.Any())
+{
+    <p>No support programs found.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var program in programs)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(program.ImageUrl))
+                    {
+                        <img src="@program.ImageUrl" class="card-img-top" alt="@program.ProgramName" style="height: 200px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">No Image</span>
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@program.ProgramName</h5>
+                        <p class="card-text">@(program.Description?.Length > 100 ? program.Description.Substring(0, 100) + "..." : program.Description)</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                @if (program.StartDate.HasValue && program.EndDate.HasValue)
+                                {
+                                    <span>@program.StartDate.Value.ToShortDateString() - @program.EndDate.Value.ToShortDateString()</span>
+                                }
+                            </small>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group w-100">
+                            <a href="/supportprograms/details/@program.Id" class="btn btn-info">Details</a>
+                            <a href="/supportprograms/edit/@program.Id" class="btn btn-primary">Edit</a>
+                            <button class="btn btn-danger" @onclick="() => DeleteProgram(program.Id)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private IEnumerable<SupportProgram> programs;
+    private IEnumerable<ProgramCategory> categories;
+    private Guid? selectedCategoryId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            categories = await SupportProgramService.GetAllCategoriesAsync();
+            
+            if (selectedCategoryId.HasValue)
+            {
+                programs = await SupportProgramService.GetProgramsByCategoryAsync(selectedCategoryId.Value);
+            }
+            else
+            {
+                programs = await SupportProgramService.GetAllProgramsAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+            // In a real app, you would handle this error appropriately
+        }
+    }
+
+    private async Task FilterByCategory(ChangeEventArgs e)
+    {
+        if (string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            selectedCategoryId = null;
+        }
+        else
+        {
+            selectedCategoryId = Guid.Parse(e.Value.ToString());
+        }
+        
+        await LoadData();
+    }
+
+    private async Task DeleteProgram(Guid id)
+    {
+        if (!await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this program?"))
+            return;
+
+        try
+        {
+            await SupportProgramService.DeleteProgramAsync(id);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting program: {ex.Message}");
+        }
+    }
+}
