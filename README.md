@@ -36,7 +36,7 @@ The project is built using a multi-tier architecture:
    
    ```json
    {
-     "ApiBaseUrl": "https://localhost:base-on-your-device"
+     "ApiBaseUrl": "https://localhost:based-on-your-device"
    }
     ```
 ### Running the Application Using Visual Studio 2022
@@ -53,14 +53,20 @@ The project is built using a multi-tier architecture:
    
    ```bash
    cd MentalEdu.BlazorApp.APIServices
-   dotnet run
+   
     ```
+
+    ```bash
+   dotnet run
+   ```
 3. In a separate command prompt, run the client application:
    
    ```bash
    cd MentalEduApp\MentalEduApp\MentalEdu.BlazorApp.Client
+   ```
+   
+   ```bash
    dotnet run
-    ```
    ```
 4. Open your browser and navigate to:
    
