@@ -1,4 +1,4 @@
-using MentalEdu.Repositories.DBContext;
+using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -6,10 +6,10 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly MentalEduGroupProjectContext _context;
+        protected readonly MentalEdu_ASMContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(MentalEduGroupProjectContext context)
+        public Repository(MentalEdu_ASMContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -20,11 +20,12 @@ namespace MentalEdu.Repositories.Repositories
             return _dbSet.Find(id);
         }
 
-        public async Task<T> GetByIdAsync(Guid id)
+        
+
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
-
         public IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
@@ -129,5 +130,12 @@ namespace MentalEdu.Repositories.Repositories
         {
             return await _dbSet.AnyAsync(predicate);
         }
+
+        public async Task<T> GetByIdAsyncGuid(Guid id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+       
     }
 }

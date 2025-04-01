@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,11 +5,11 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class UserProgramRepository : Repository<UserProgram>, IUserProgramRepository
     {
-        public UserProgramRepository(MentalEduGroupProjectContext context) : base(context)
+        public UserProgramRepository(MentalEdu_ASMContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<UserProgram>> GetProgramsByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<UserProgram>> GetProgramsByUserIdAsync(int userId)
         {
             return await _dbSet.Where(up => up.UserId == userId && up.ActiveFlag == true)
                               .OrderByDescending(up => up.CreatedAt)

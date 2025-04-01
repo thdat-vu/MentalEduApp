@@ -24,7 +24,7 @@ namespace MentalEdu.Services.Services
 
         public async Task<SupportProgram> GetProgramByIdAsync(Guid id)
         {
-            return await _unitOfWork.SupportPrograms.GetByIdAsync(id);
+            return await _unitOfWork.SupportPrograms.GetByIdAsyncGuid(id);
         }
 
         public async Task<IEnumerable<SupportProgram>> GetProgramsByCategoryIdAsync(Guid categoryId)
@@ -47,7 +47,7 @@ namespace MentalEdu.Services.Services
 
         public async Task UpdateProgramAsync(SupportProgram program)
         {
-            var existingProgram = await _unitOfWork.SupportPrograms.GetByIdAsync(program.Id);
+            var existingProgram = await _unitOfWork.SupportPrograms.GetByIdAsyncGuid(program.Id);
             if (existingProgram == null)
                 throw new KeyNotFoundException($"Program with ID {program.Id} not found");
 
@@ -65,7 +65,7 @@ namespace MentalEdu.Services.Services
 
         public async Task DeleteProgramAsync(Guid id)
         {
-            var program = await _unitOfWork.SupportPrograms.GetByIdAsync(id);
+            var program = await _unitOfWork.SupportPrograms.GetByIdAsyncGuid(id);
             if (program == null)
                 throw new KeyNotFoundException($"Program with ID {id} not found");
 

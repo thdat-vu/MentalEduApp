@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 4,
-   "ContextClassName": "MentalEduGroupProjectContext",
+   "ContextClassName": "MentalEdu_ASMContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": true,
@@ -27,6 +27,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[CounselingSession]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Notification]",
          "ObjectType": 0
       },
@@ -35,7 +39,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Psychologist]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PsychologistSpecialization]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Report]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SessionFeedback]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Specialization]",
          "ObjectType": 0
       },
       {

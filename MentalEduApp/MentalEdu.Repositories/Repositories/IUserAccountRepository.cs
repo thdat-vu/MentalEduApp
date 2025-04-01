@@ -6,7 +6,7 @@ namespace MentalEdu.Repositories.Repositories
     {
         // Add specific methods for UserAccount entity
         Task<UserAccount> GetByEmailAsync(string email);
-        Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(string role);
+        Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(int role);
         Task<bool> IsEmailUniqueAsync(string email);
     }
 }

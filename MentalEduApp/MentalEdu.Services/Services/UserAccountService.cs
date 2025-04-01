@@ -16,10 +16,10 @@ namespace MentalEdu.Services.Services
 
         public async Task<IEnumerable<UserAccount>> GetAllUsersAsync()
         {
-            return await _unitOfWork.UserAccounts.FindAsync(u => u.ActiveFlag == true);
+            return await _unitOfWork.UserAccounts.FindAsync(u => u.IsActive == true);
         }
 
-        public async Task<UserAccount> GetUserByIdAsync(Guid id)
+        public async Task<UserAccount> GetUserByIdAsync(int id)
         {
             return await _unitOfWork.UserAccounts.GetByIdAsync(id);
         }
@@ -29,9 +29,9 @@ namespace MentalEdu.Services.Services
             return await _unitOfWork.UserAccounts.GetByEmailAsync(email);
         }
 
-        public async Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(string role)
+        public async Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(int roleId)
         {
-            return await _unitOfWork.UserAccounts.GetUsersByRoleAsync(role);
+            return await _unitOfWork.UserAccounts.GetUsersByRoleAsync(roleId);
         }
 
         public async Task<bool> IsEmailUniqueAsync(string email)
@@ -42,12 +42,12 @@ namespace MentalEdu.Services.Services
         public async Task<UserAccount> CreateUserAsync(UserAccount user, string password)
         {
             // Hash the password
-            user.PasswordHash = HashPassword(password);
-            user.Id = Guid.NewGuid();
-            user.CreatedAt = DateTime.Now;
-            user.UpdatedAt = DateTime.Now;
-            user.ActiveFlag = true;
-            user.EmailConfirmed = false;
+            user.Password = HashPassword(password);
+            //user. = Guid.NewGuid();
+            //user.CreatedAt = DateTime.Now;
+            //user.UpdatedAt = DateTime.Now;
+            user.IsActive = true;
+            user.Email = user.Email.ToLower();  
 
             await _unitOfWork.UserAccounts.AddAsync(user);
             await _unitOfWork.CompleteAsync();
@@ -57,16 +57,16 @@ namespace MentalEdu.Services.Services
 
         public async Task UpdateUserAsync(UserAccount user)
         {
-            var existingUser = await _unitOfWork.UserAccounts.GetByIdAsync(user.Id);
+            var existingUser = await _unitOfWork.UserAccounts.GetByIdAsync(user.UserAccountId);
             if (existingUser == null)
-                throw new KeyNotFoundException($"User with ID {user.Id} not found");
+                throw new KeyNotFoundException($"User with ID {user.UserAccountId} not found");
 
             existingUser.FullName = user.FullName;
-            existingUser.PhoneNumber = user.PhoneNumber;
-            existingUser.Gender = user.Gender;
-            existingUser.DateOfBirth = user.DateOfBirth;
-            existingUser.AvatarUrl = user.AvatarUrl;
-            existingUser.UpdatedAt = DateTime.Now;
+            //existingUser.PhoneNumber = user.PhoneNumber;
+            //existingUser.Gender = user.Gender;
+            //existingUser.DateOfBirth = user.DateOfBirth;
+            //existingUser.AvatarUrl = user.AvatarUrl;
+            //existingUser.UpdatedAt = DateTime.Now;
 
             // Don't update email or password here for security reasons
             // Those should be separate operations with proper validation
@@ -75,15 +75,15 @@ namespace MentalEdu.Services.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task DeleteUserAsync(Guid id)
+        public async Task DeleteUserAsync(int id)
         {
             var user = await _unitOfWork.UserAccounts.GetByIdAsync(id);
             if (user == null)
                 throw new KeyNotFoundException($"User with ID {id} not found");
 
             // Soft delete
-            user.ActiveFlag = false;
-            user.UpdatedAt = DateTime.Now;
+            user.IsActive = false;
+            //user.UpdatedAt = DateTime.Now;
 
             _unitOfWork.UserAccounts.Update(user);
             await _unitOfWork.CompleteAsync();
@@ -96,7 +96,7 @@ namespace MentalEdu.Services.Services
                 return false;
 
             string hashedPassword = HashPassword(password);
-            return user.PasswordHash == hashedPassword;
+            return user.Password == hashedPassword;
         }
 
         private string HashPassword(string password)
@@ -112,6 +112,11 @@ namespace MentalEdu.Services.Services
                 }
                 return builder.ToString();
             }
+        }
+
+        public Task<IEnumerable<UserAccount>> GetUsersByRoleAsync(string role)
+        {
+            throw new NotImplementedException();
         }
     }
 }

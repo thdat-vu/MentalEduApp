@@ -1,11 +1,11 @@
-using MentalEdu.Repositories.DBContext;
+using MentalEdu.Repositories.Models;
 using MentalEdu.Repositories.Repositories;
 
 namespace MentalEdu.Repositories.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MentalEduGroupProjectContext _context;
+        private readonly MentalEdu_ASMContext _context;
         private bool _disposed = false;
 
         // Repositories
@@ -22,7 +22,7 @@ namespace MentalEdu.Repositories.UnitOfWork
         private IUserAccountRepository _userAccounts;
         private IUserProgramRepository _userPrograms;
 
-        public UnitOfWork(MentalEduGroupProjectContext context)
+        public UnitOfWork(MentalEdu_ASMContext context)
         {
             _context = context;
         }

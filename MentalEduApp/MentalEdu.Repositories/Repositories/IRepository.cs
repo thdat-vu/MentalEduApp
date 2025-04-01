@@ -6,7 +6,8 @@ namespace MentalEdu.Repositories.Repositories
     {
         // Get methods
         T GetById(Guid id);
-        Task<T> GetByIdAsync(Guid id);
+        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsyncGuid(Guid id);
         IEnumerable<T> GetAll();
         Task<IEnumerable<T>> GetAllAsync();
         IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
