@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,11 +5,11 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class ReportRepository : Repository<Report>, IReportRepository
     {
-        public ReportRepository(MentalEduGroupProjectContext context) : base(context)
+        public ReportRepository(MentalEdu_ASMContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Report>> GetReportsByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<Report>> GetReportsByUserIdAsync(int userId)
         {
             return await _dbSet.Where(r => r.UserId == userId && r.ActiveFlag == true)
                               .OrderByDescending(r => r.ReportDate)

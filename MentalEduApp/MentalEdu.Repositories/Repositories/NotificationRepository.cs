@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,14 +5,14 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class NotificationRepository : Repository<Notification>, INotificationRepository
     {
-        private readonly MentalEduGroupProjectContext _mentalEduContext;
+        private readonly MentalEdu_ASMContext _mentalEduContext;
 
-        public NotificationRepository(MentalEduGroupProjectContext context) : base(context)
+        public NotificationRepository(MentalEdu_ASMContext context) : base(context)
         {
             _mentalEduContext = context;
         }
 
-        public async Task<IEnumerable<Notification>> GetUnreadNotificationsAsync(Guid userId)
+        public async Task<IEnumerable<Notification>> GetUnreadNotificationsAsync(int userId)
         {
             return await _dbSet.Where(n => n.UserId == userId && n.IsRead == false && n.ActiveFlag == true)
                               .OrderByDescending(n => n.CreatedAt)
@@ -32,7 +31,7 @@ namespace MentalEdu.Repositories.Repositories
             return 0;
         }
 
-        public async Task<int> MarkAllAsReadAsync(Guid userId)
+        public async Task<int> MarkAllAsReadAsync(int userId)
         {
             var notifications = await _dbSet.Where(n => n.UserId == userId && n.IsRead == false && n.ActiveFlag == true)
                                           .ToListAsync();

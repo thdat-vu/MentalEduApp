@@ -6,6 +6,6 @@ namespace MentalEdu.Repositories.Repositories
     {
         // Add specific methods for BlogComment entity
         Task<IEnumerable<BlogComment>> GetCommentsByBlogIdAsync(Guid blogId);
-        Task<IEnumerable<BlogComment>> GetCommentsByUserIdAsync(Guid userId);
+        Task<IEnumerable<BlogComment>> GetCommentsByUserIdAsync(int userId);
     }
 }

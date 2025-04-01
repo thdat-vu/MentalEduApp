@@ -5,17 +5,13 @@ using System.Collections.Generic;
 
 namespace MentalEdu.Repositories.Models;
 
-public partial class BlogComment
+public partial class Specialization
 {
     public Guid Id { get; set; }
 
-    public Guid? BlogId { get; set; }
+    public string Name { get; set; }
 
-    public int? UserId { get; set; }
-
-    public string ImageUrl { get; set; }
-
-    public string CommentText { get; set; }
+    public string Description { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -23,7 +19,5 @@ public partial class BlogComment
 
     public bool? ActiveFlag { get; set; }
 
-    public virtual Blog Blog { get; set; }
-
-    public virtual UserAccount User { get; set; }
+    public virtual ICollection<PsychologistSpecialization> PsychologistSpecializations { get; set; } = new List<PsychologistSpecialization>();
 }

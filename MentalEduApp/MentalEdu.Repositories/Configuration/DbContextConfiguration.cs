@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MentalEdu.Repositories.DBContext;
+using MentalEdu.Repositories.Models;
 
 namespace MentalEdu.Repositories.Configuration
 {
@@ -9,7 +9,7 @@ namespace MentalEdu.Repositories.Configuration
     {
         public static IServiceCollection AddDbContextConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<MentalEduGroupProjectContext>(options =>
+            services.AddDbContext<MentalEdu_ASMContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             return services;

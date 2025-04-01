@@ -6,7 +6,7 @@ namespace MentalEdu.Repositories.Repositories
     {
         // Add specific methods for SurveyAnswer entity
         Task<IEnumerable<SurveyAnswer>> GetAnswersBySurveyIdAsync(Guid surveyId);
-        Task<IEnumerable<SurveyAnswer>> GetAnswersByUserIdAsync(Guid userId);
+        Task<IEnumerable<SurveyAnswer>> GetAnswersByUserIdAsync(int userId);
         Task<IEnumerable<SurveyAnswer>> GetAnswersByQuestionIdAsync(Guid questionId);
     }
 }

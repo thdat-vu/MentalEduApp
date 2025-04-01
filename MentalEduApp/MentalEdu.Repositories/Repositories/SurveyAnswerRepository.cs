@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,8 +5,9 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class SurveyAnswerRepository : Repository<SurveyAnswer>, ISurveyAnswerRepository
     {
-        public SurveyAnswerRepository(MentalEduGroupProjectContext context) : base(context)
+        public SurveyAnswerRepository(MentalEdu_ASMContext context) : base(context)
         {
+            // Constructor implementation
         }
 
         public async Task<IEnumerable<SurveyAnswer>> GetAnswersBySurveyIdAsync(Guid surveyId)
@@ -17,7 +17,7 @@ namespace MentalEdu.Repositories.Repositories
                               .ToListAsync();
         }
 
-        public async Task<IEnumerable<SurveyAnswer>> GetAnswersByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<SurveyAnswer>> GetAnswersByUserIdAsync(int userId)
         {
             return await _dbSet.Where(sa => sa.UserId == userId && sa.ActiveFlag == true)
                               .OrderByDescending(sa => sa.CreatedAt)

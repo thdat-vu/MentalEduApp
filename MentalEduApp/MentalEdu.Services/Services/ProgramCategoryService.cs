@@ -24,7 +24,7 @@ namespace MentalEdu.Services.Services
 
         public async Task<ProgramCategory> GetCategoryByIdAsync(Guid id)
         {
-            return await _unitOfWork.ProgramCategories.GetByIdAsync(id);
+            return await _unitOfWork.ProgramCategories.GetByIdAsyncGuid(id);
         }
 
         public async Task<ProgramCategory> CreateCategoryAsync(ProgramCategory category)
@@ -42,7 +42,7 @@ namespace MentalEdu.Services.Services
 
         public async Task UpdateCategoryAsync(ProgramCategory category)
         {
-            var existingCategory = await _unitOfWork.ProgramCategories.GetByIdAsync(category.Id);
+            var existingCategory = await _unitOfWork.ProgramCategories.GetByIdAsyncGuid(category.Id);
             if (existingCategory == null)
                 throw new KeyNotFoundException($"Category with ID {category.Id} not found");
 
@@ -56,7 +56,7 @@ namespace MentalEdu.Services.Services
 
         public async Task DeleteCategoryAsync(Guid id)
         {
-            var category = await _unitOfWork.ProgramCategories.GetByIdAsync(id);
+            var category = await _unitOfWork.ProgramCategories.GetByIdAsyncGuid(id);
             if (category == null)
                 throw new KeyNotFoundException($"Category with ID {id} not found");
 

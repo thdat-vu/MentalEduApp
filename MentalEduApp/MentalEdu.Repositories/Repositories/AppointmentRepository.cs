@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,20 +5,22 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class AppointmentRepository : Repository<Appointment>, IAppointmentRepository
     {
-        public AppointmentRepository(MentalEduGroupProjectContext context) : base(context)
+        public AppointmentRepository(MentalEdu_ASMContext context) : base(context)
         {
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByStudentIdAsync(Guid studentId)
         {
-            return await _dbSet.Where(a => a.StudentId == studentId && a.ActiveFlag == true)
+            // Convert Guid to int? or adjust the comparison based on your model
+            return await _dbSet.Where(a => a.StudentId.ToString() == studentId.ToString() && a.ActiveFlag == true)
                               .OrderByDescending(a => a.AppointmentDate)
                               .ToListAsync();
         }
 
         public async Task<IEnumerable<Appointment>> GetAppointmentsByPsychologistIdAsync(Guid psychologistId)
         {
-            return await _dbSet.Where(a => a.PsychologistId == psychologistId && a.ActiveFlag == true)
+            // Convert Guid to int? or adjust the comparison based on your model
+            return await _dbSet.Where(a => a.PsychologistId.ToString() == psychologistId.ToString() && a.ActiveFlag == true)
                               .OrderByDescending(a => a.AppointmentDate)
                               .ToListAsync();
         }
@@ -30,7 +31,8 @@ namespace MentalEdu.Repositories.Repositories
             
             if (isPsychologist)
             {
-                return await _dbSet.Where(a => a.PsychologistId == userId && 
+                // Convert Guid to int? or adjust the comparison based on your model
+                return await _dbSet.Where(a => a.PsychologistId.ToString() == userId.ToString() && 
                                              a.AppointmentDate > now && 
                                              a.ActiveFlag == true)
                                   .OrderBy(a => a.AppointmentDate)
@@ -38,7 +40,8 @@ namespace MentalEdu.Repositories.Repositories
             }
             else
             {
-                return await _dbSet.Where(a => a.StudentId == userId && 
+                // Convert Guid to int? or adjust the comparison based on your model
+                return await _dbSet.Where(a => a.StudentId.ToString() == userId.ToString() && 
                                              a.AppointmentDate > now && 
                                              a.ActiveFlag == true)
                                   .OrderBy(a => a.AppointmentDate)

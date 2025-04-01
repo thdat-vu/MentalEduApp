@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace MentalEdu.Repositories.Models;
 
-public partial class BlogComment
+public partial class SessionFeedback
 {
     public Guid Id { get; set; }
 
-    public Guid? BlogId { get; set; }
+    public Guid? SessionId { get; set; }
 
-    public int? UserId { get; set; }
+    public int? StudentId { get; set; }
 
-    public string ImageUrl { get; set; }
+    public int Rating { get; set; }
 
-    public string CommentText { get; set; }
+    public string FeedbackText { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -23,7 +23,7 @@ public partial class BlogComment
 
     public bool? ActiveFlag { get; set; }
 
-    public virtual Blog Blog { get; set; }
+    public virtual CounselingSession Session { get; set; }
 
-    public virtual UserAccount User { get; set; }
+    public virtual UserAccount Student { get; set; }
 }

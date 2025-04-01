@@ -3,20 +3,16 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using MentalEdu.Repositories.Models;
-using Microsoft.Extensions.Configuration;
 
-namespace MentalEdu.Repositories.DBContext;
+namespace MentalEdu.Repositories.Models;
 
-public partial class MentalEduGroupProjectContext : DbContext
+public partial class MentalEdu_ASMContext : DbContext
 {
-    private readonly IConfiguration _configuration;
-
-    public MentalEduGroupProjectContext()
+    public MentalEdu_ASMContext()
     {
     }
 
-    public MentalEduGroupProjectContext(DbContextOptions<MentalEduGroupProjectContext> options)
+    public MentalEdu_ASMContext(DbContextOptions<MentalEdu_ASMContext> options)
         : base(options)
     {
     }
@@ -27,11 +23,21 @@ public partial class MentalEduGroupProjectContext : DbContext
 
     public virtual DbSet<BlogComment> BlogComments { get; set; }
 
+    public virtual DbSet<CounselingSession> CounselingSessions { get; set; }
+
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<ProgramCategory> ProgramCategories { get; set; }
 
+    public virtual DbSet<Psychologist> Psychologists { get; set; }
+
+    public virtual DbSet<PsychologistSpecialization> PsychologistSpecializations { get; set; }
+
     public virtual DbSet<Report> Reports { get; set; }
+
+    public virtual DbSet<SessionFeedback> SessionFeedbacks { get; set; }
+
+    public virtual DbSet<Specialization> Specializations { get; set; }
 
     public virtual DbSet<SupportProgram> SupportPrograms { get; set; }
 
@@ -44,24 +50,14 @@ public partial class MentalEduGroupProjectContext : DbContext
     public virtual DbSet<UserAccount> UserAccounts { get; set; }
 
     public virtual DbSet<UserProgram> UserPrograms { get; set; }
-    
-    // TODO: config environment
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            // This is only used when the context is created without passing options
-            // For example, when using the context in design-time tools
-            // In production, the context should be configured through DI
-        }
-    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC07AE7CFC4F");
+            entity.HasKey(e => e.Id).HasName("PK__Appointm__3214EC070B51662C");
 
             entity.ToTable("Appointment");
 
@@ -80,16 +76,16 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Psychologist).WithMany(p => p.AppointmentPsychologists)
                 .HasForeignKey(d => d.PsychologistId)
-                .HasConstraintName("FK__Appointme__Psych__60A75C0F");
+                .HasConstraintName("FK__Appointme__Psych__59063A47");
 
             entity.HasOne(d => d.Student).WithMany(p => p.AppointmentStudents)
                 .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK__Appointme__Stude__5FB337D6");
+                .HasConstraintName("FK__Appointme__Stude__5812160E");
         });
 
         modelBuilder.Entity<Blog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC076DDC13C1");
+            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC07790D6F99");
 
             entity.ToTable("Blog");
 
@@ -111,12 +107,12 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Author).WithMany(p => p.Blogs)
                 .HasForeignKey(d => d.AuthorId)
-                .HasConstraintName("FK__Blog__AuthorId__693CA210");
+                .HasConstraintName("FK__Blog__AuthorId__619B8048");
         });
 
         modelBuilder.Entity<BlogComment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BlogComm__3214EC075BDD73FE");
+            entity.HasKey(e => e.Id).HasName("PK__BlogComm__3214EC07BE312C91");
 
             entity.ToTable("BlogComment");
 
@@ -132,16 +128,45 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Blog).WithMany(p => p.BlogComments)
                 .HasForeignKey(d => d.BlogId)
-                .HasConstraintName("FK__BlogComme__BlogI__70DDC3D8");
+                .HasConstraintName("FK__BlogComme__BlogI__693CA210");
 
             entity.HasOne(d => d.User).WithMany(p => p.BlogComments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__BlogComme__UserI__71D1E811");
+                .HasConstraintName("FK__BlogComme__UserI__6A30C649");
+        });
+
+        modelBuilder.Entity<CounselingSession>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Counseli__3214EC076693F9FD");
+
+            entity.ToTable("CounselingSession");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.SessionDate).HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValue("Scheduled");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Psychologist).WithMany(p => p.CounselingSessions)
+                .HasForeignKey(d => d.PsychologistId)
+                .HasConstraintName("FK__Counselin__Psych__151B244E");
+
+            entity.HasOne(d => d.User).WithMany(p => p.CounselingSessions)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Counselin__UserI__160F4887");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC075E0EE4EE");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07E87AD14C");
 
             entity.ToTable("Notification");
 
@@ -150,27 +175,38 @@ public partial class MentalEduGroupProjectContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.IsRead).HasDefaultValue(false);
-            entity.Property(e => e.Message).IsRequired();
-            entity.Property(e => e.NotificationType)
+            entity.Property(e => e.DestinationScreen)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.IsRead).HasDefaultValue(false);
+            entity.Property(e => e.Message)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Type)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
             entity.HasOne(d => d.User).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Notificat__UserI__01142BA1");
+                .HasConstraintName("FK__Notificat__UserI__3493CFA7");
         });
 
         modelBuilder.Entity<ProgramCategory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProgramC__3214EC070B29A47D");
+            entity.HasKey(e => e.Id).HasName("PK__ProgramC__3214EC071697D189");
 
             entity.ToTable("ProgramCategory");
 
-            entity.HasIndex(e => e.Name, "UQ__ProgramC__737584F680DD5C64").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__ProgramC__737584F6685CAA19").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
@@ -185,9 +221,77 @@ public partial class MentalEduGroupProjectContext : DbContext
                 .HasColumnType("datetime");
         });
 
+        modelBuilder.Entity<Psychologist>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Psycholo__3214EC079C576AF9");
+
+            entity.ToTable("Psychologist");
+
+            entity.HasIndex(e => e.ContactPhone, "UQ__Psycholo__5AE1ED84B99E54A2").IsUnique();
+
+            entity.HasIndex(e => e.LicenseNumber, "UQ__Psycholo__E88901660EFF5635").IsUnique();
+
+            entity.HasIndex(e => e.ContactEmail, "UQ__Psycholo__FFA796CDA130E04C").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
+            entity.Property(e => e.ClinicAddress).HasMaxLength(500);
+            entity.Property(e => e.ConsultationFee).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.ContactEmail)
+                .IsRequired()
+                .HasMaxLength(150);
+            entity.Property(e => e.ContactPhone)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FullName)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.LicenseNumber)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.Qualification)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.RatingsAverage).HasDefaultValue(0.0);
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Psychologists)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Psycholog__UserI__7B5B524B");
+        });
+
+        modelBuilder.Entity<PsychologistSpecialization>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Psycholo__3214EC07B375BA4A");
+
+            entity.ToTable("PsychologistSpecialization");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Psychologist).WithMany(p => p.PsychologistSpecializations)
+                .HasForeignKey(d => d.PsychologistId)
+                .HasConstraintName("FK__Psycholog__Psych__0D7A0286");
+
+            entity.HasOne(d => d.Specialization).WithMany(p => p.PsychologistSpecializations)
+                .HasForeignKey(d => d.SpecializationId)
+                .HasConstraintName("FK__Psycholog__Speci__0E6E26BF");
+        });
+
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Report__3214EC07CF445D5E");
+            entity.HasKey(e => e.Id).HasName("PK__Report__3214EC0727F4CFC0");
 
             entity.ToTable("Report");
 
@@ -205,18 +309,59 @@ public partial class MentalEduGroupProjectContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ReportCreatedByNavigations)
-                .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Report__CreatedB__7A672E12");
-
-            entity.HasOne(d => d.User).WithMany(p => p.ReportUsers)
+            entity.HasOne(d => d.User).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Report__UserId__787EE5A0");
+                .HasConstraintName("FK__Report__UserId__70DDC3D8");
+        });
+
+        modelBuilder.Entity<SessionFeedback>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SessionF__3214EC07629D78CF");
+
+            entity.ToTable("SessionFeedback");
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Session).WithMany(p => p.SessionFeedbacks)
+                .HasForeignKey(d => d.SessionId)
+                .HasConstraintName("FK__SessionFe__Sessi__208CD6FA");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.SessionFeedbacks)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("FK__SessionFe__Stude__2180FB33");
+        });
+
+        modelBuilder.Entity<Specialization>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Speciali__3214EC07263F3B7F");
+
+            entity.ToTable("Specialization");
+
+            entity.HasIndex(e => e.Name, "UQ__Speciali__737584F6975841FA").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<SupportProgram>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SupportP__3214EC07D12009C8");
+            entity.HasKey(e => e.Id).HasName("PK__SupportP__3214EC0765749492");
 
             entity.ToTable("SupportProgram");
 
@@ -237,16 +382,16 @@ public partial class MentalEduGroupProjectContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.SupportPrograms)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SupportPr__Categ__4D94879B");
+                .HasConstraintName("FK__SupportPr__Categ__45F365D3");
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.SupportPrograms)
                 .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__SupportPr__Creat__4E88ABD4");
+                .HasConstraintName("FK__SupportPr__Creat__46E78A0C");
         });
 
         modelBuilder.Entity<Survey>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC079548D81B");
+            entity.HasKey(e => e.Id).HasName("PK__Survey__3214EC073723BAF8");
 
             entity.ToTable("Survey");
 
@@ -269,12 +414,12 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Surveys)
                 .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Survey__CreatedB__300424B4");
+                .HasConstraintName("FK__Survey__CreatedB__286302EC");
         });
 
         modelBuilder.Entity<SurveyAnswer>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SurveyAn__3214EC0727E077B8");
+            entity.HasKey(e => e.Id).HasName("PK__SurveyAn__3214EC0787BA707A");
 
             entity.ToTable("SurveyAnswer");
 
@@ -290,20 +435,20 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Question).WithMany(p => p.SurveyAnswers)
                 .HasForeignKey(d => d.QuestionId)
-                .HasConstraintName("FK__SurveyAns__Quest__403A8C7D");
+                .HasConstraintName("FK__SurveyAns__Quest__38996AB5");
 
             entity.HasOne(d => d.Survey).WithMany(p => p.SurveyAnswers)
                 .HasForeignKey(d => d.SurveyId)
-                .HasConstraintName("FK__SurveyAns__Surve__3E52440B");
+                .HasConstraintName("FK__SurveyAns__Surve__36B12243");
 
             entity.HasOne(d => d.User).WithMany(p => p.SurveyAnswers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__SurveyAns__UserI__3F466844");
+                .HasConstraintName("FK__SurveyAns__UserI__37A5467C");
         });
 
         modelBuilder.Entity<SurveyQuestion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SurveyQu__3214EC07D3DE0510");
+            entity.HasKey(e => e.Id).HasName("PK__SurveyQu__3214EC07F1E9CC30");
 
             entity.ToTable("SurveyQuestion");
 
@@ -322,46 +467,45 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Survey).WithMany(p => p.SurveyQuestions)
                 .HasForeignKey(d => d.SurveyId)
-                .HasConstraintName("FK__SurveyQue__Surve__36B12243");
+                .HasConstraintName("FK__SurveyQue__Surve__2F10007B");
         });
 
         modelBuilder.Entity<UserAccount>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC07C5B9E0C7");
+            entity.HasKey(e => e.UserAccountId).HasName("PK__UserAcco__DA6C70BACE2518D5");
 
             entity.ToTable("UserAccount");
 
-            entity.HasIndex(e => e.Email, "UQ__UserAcco__A9D10534B5CAD2F8").IsUnique();
-
-            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.ActiveFlag).HasDefaultValue(true);
-            entity.Property(e => e.AvatarUrl).HasMaxLength(512);
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
+            entity.Property(e => e.ApplicationCode).HasMaxLength(50);
+            entity.Property(e => e.CreatedBy).HasMaxLength(50);
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.EmailConfirmed).HasDefaultValue(false);
-            entity.Property(e => e.FullName)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.Gender).HasMaxLength(10);
-            entity.Property(e => e.PasswordHash)
-                .IsRequired()
-                .HasMaxLength(512);
-            entity.Property(e => e.PhoneNumber).HasMaxLength(15);
-            entity.Property(e => e.Role)
+                .HasMaxLength(150);
+            entity.Property(e => e.EmployeeCode)
                 .IsRequired()
                 .HasMaxLength(50);
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
+            entity.Property(e => e.FullName)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.ModifiedBy).HasMaxLength(50);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Password)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.Phone)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.RequestCode).HasMaxLength(50);
+            entity.Property(e => e.UserName)
+                .IsRequired()
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<UserProgram>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserProg__3214EC07460E58F1");
+            entity.HasKey(e => e.Id).HasName("PK__UserProg__3214EC07487FCEE0");
 
             entity.ToTable("UserProgram");
 
@@ -380,11 +524,11 @@ public partial class MentalEduGroupProjectContext : DbContext
 
             entity.HasOne(d => d.Program).WithMany(p => p.UserPrograms)
                 .HasForeignKey(d => d.ProgramId)
-                .HasConstraintName("FK__UserProgr__Progr__5629CD9C");
+                .HasConstraintName("FK__UserProgr__Progr__4E88ABD4");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserPrograms)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__UserProgr__UserI__5535A963");
+                .HasConstraintName("FK__UserProgr__UserI__4D94879B");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -7,31 +7,35 @@ namespace MentalEdu.Repositories.Models;
 
 public partial class UserAccount
 {
-    public Guid Id { get; set; }
+    public int UserAccountId { get; set; }
+
+    public string UserName { get; set; }
+
+    public string Password { get; set; }
 
     public string FullName { get; set; }
 
     public string Email { get; set; }
 
-    public bool? EmailConfirmed { get; set; }
+    public string Phone { get; set; }
 
-    public string PasswordHash { get; set; }
+    public string EmployeeCode { get; set; }
 
-    public string PhoneNumber { get; set; }
+    public int RoleId { get; set; }
 
-    public string Role { get; set; }
+    public string RequestCode { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
-    public string Gender { get; set; }
+    public string ApplicationCode { get; set; }
 
-    public string AvatarUrl { get; set; }
+    public string CreatedBy { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
+    public DateTime? ModifiedDate { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public string ModifiedBy { get; set; }
 
-    public bool? ActiveFlag { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual ICollection<Appointment> AppointmentPsychologists { get; set; } = new List<Appointment>();
 
@@ -41,11 +45,15 @@ public partial class UserAccount
 
     public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
 
+    public virtual ICollection<CounselingSession> CounselingSessions { get; set; } = new List<CounselingSession>();
+
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
-    public virtual ICollection<Report> ReportCreatedByNavigations { get; set; } = new List<Report>();
+    public virtual ICollection<Psychologist> Psychologists { get; set; } = new List<Psychologist>();
 
-    public virtual ICollection<Report> ReportUsers { get; set; } = new List<Report>();
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
+
+    public virtual ICollection<SessionFeedback> SessionFeedbacks { get; set; } = new List<SessionFeedback>();
 
     public virtual ICollection<SupportProgram> SupportPrograms { get; set; } = new List<SupportProgram>();
 

@@ -1,4 +1,3 @@
-using MentalEdu.Repositories.DBContext;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +5,7 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class SupportProgramRepository : Repository<SupportProgram>, ISupportProgramRepository
     {
-        public SupportProgramRepository(MentalEduGroupProjectContext context) : base(context)
+        public SupportProgramRepository(MentalEdu_ASMContext context) : base(context)
         {
         }
 

@@ -1,4 +1,4 @@
-using MentalEdu.Repositories.DBContext;
+using MentalEdu.Repositories.Models;
 using MentalEdu.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +6,7 @@ namespace MentalEdu.Repositories.Repositories
 {
     public class BlogCommentRepository : Repository<BlogComment>, IBlogCommentRepository
     {
-        public BlogCommentRepository(MentalEduGroupProjectContext context) : base(context)
+        public BlogCommentRepository(MentalEdu_ASMContext context) : base(context)
         {
         }
 
@@ -17,7 +17,7 @@ namespace MentalEdu.Repositories.Repositories
                               .ToListAsync();
         }
 
-        public async Task<IEnumerable<BlogComment>> GetCommentsByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<BlogComment>> GetCommentsByUserIdAsync(int userId)
         {
             return await _dbSet.Where(bc => bc.UserId == userId && bc.ActiveFlag == true)
                               .OrderByDescending(bc => bc.CreatedAt)

@@ -5,17 +5,23 @@ using System.Collections.Generic;
 
 namespace MentalEdu.Repositories.Models;
 
-public partial class BlogComment
+public partial class CounselingSession
 {
     public Guid Id { get; set; }
 
-    public Guid? BlogId { get; set; }
+    public Guid? PsychologistId { get; set; }
 
     public int? UserId { get; set; }
 
-    public string ImageUrl { get; set; }
+    public DateTime SessionDate { get; set; }
 
-    public string CommentText { get; set; }
+    public int DurationMinutes { get; set; }
+
+    public string Status { get; set; }
+
+    public string Notes { get; set; }
+
+    public int? Rating { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -23,7 +29,9 @@ public partial class BlogComment
 
     public bool? ActiveFlag { get; set; }
 
-    public virtual Blog Blog { get; set; }
+    public virtual Psychologist Psychologist { get; set; }
+
+    public virtual ICollection<SessionFeedback> SessionFeedbacks { get; set; } = new List<SessionFeedback>();
 
     public virtual UserAccount User { get; set; }
 }
